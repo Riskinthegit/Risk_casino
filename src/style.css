@@ -1,0 +1,28 @@
+#canvasContainer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    margin-left: 0;
+  top: 0;
+  background-image: "/
+  static/data/background.png" ;
+  }
+  
+  #spinButton {
+    position: absolute;
+    bottom: 55%;
+    left: 49%;
+  
+   
+    font-size: 32px;
+    background-color: green; /* Green background */
+    color: white; /* White text */
+    border: none; /* Remove border */
+    border-radius: 36px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+  }
+  
+  #spinButton:hover {
+    background-color: darkgreen; /* Darker green on hover */
+  }
