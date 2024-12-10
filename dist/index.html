@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="utf-8">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    
+        <script type="importmap">
+          {
+              "imports": {
+                  "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                  "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.128.0/examples/jsm/loaders/GLTFLoader.js"
+              }
+          }
+          
+   </script>
+        <script type="module" crossorigin src="/assets/index-CeIDz_TJ.js"></script>
+        <link rel="stylesheet" crossorigin href="/assets/index-SB7DAGFZ.css">
+      </head>
+      <body>
+
+ 
+    <div>
+      <canvas id="webgl"></canvas>
+      
+  </div>
+    <div id="canvasContainer">
+        <button id="spinButton">Spin</button>
+    </div>
+   
+    <script>
+      let spinButton = document.createElement('button');
+      let numReels = 3;
+      let numSymbols = 6;
+      let numPositions = 12;
+      let reelPositions = new Array(numReels).fill(0);
+      let reelSpinning = new Array(numReels).fill(false);
+      let symbols = [];
+      let budget = 1000; // Initial budget
+      let reels = Array(numReels).fill(0);
+      let spins = 0;
+      let symbolNames = ["cherry", "Lemon", "Seven", "Bell", "Star", "Chip"];
+      let lastText = "Bienvenido a la Tragamonedas";
+      let values = null;
+      let fondo = null;
+     
+      let spinSound;
+      let winSound;
+      let lostSound;
+      let coinSound;
+
+      // Define the winnings table
+      const winningsTable = {
+        "Seven-Seven-Seven": 1500,
+        "Bell-Bell-Bell": 1200,
+        "Chip-Chip-Chip": 1100,
+        "cherry-cherry-cherry": 1000,
+        "Star-Star-Star": 900,
+        "Lemon-Lemon-Lemon": 800,
+        "Seven-Seven": 300, 
+        "Bell-Bell": 250,
+        "Chip-Chip": 220,
+        "cherry-cherry": 200,
+        "Star-Star": 180,
+        "Lemon-Lemon": 150, 
+      };
+
+      function preload() {
+        for (let i = 0; i < numSymbols; i++) {
+          symbols[i] = loadImage("data/" + symbolNames[i] + ".png");
+        }
+        values=loadImage("/data/values.png");
+        fondo=loadImage("/data/background.png");
+        // Load sound files
+        spinSound = new Audio('data/spin.wav'); 
+        winSound = new Audio('data/winall.wav');
+        lostSound = new Audio('data/lost.wav');
+        coinSound = new Audio('data/coins.wav');
+      }
+
+      function setup() {
+        // Create the canvas and place it inside the container
+        let canvas = createCanvas(innerWidth, innerHeight);
+        canvas.parent('canvasContainer');
+      }
+
+      function draw() {
+        // Clear the background with Black
+        clear()
+  
+
+        // Draw slot machine reels
+        for (let i = 0; i < numReels; i++) {
+          if (reelSpinning[i]) {
+            // Randomly change the content
+            reels[i] = Math.floor(Math.random() * 6);
+          }
+          // Draw a square with a border
+        fill(0,0,0,0,0);
+        stroke(255);
+        rect(width/2.55 +i *150, height / 1.75 - 81, 81, 81);
+          // Draw the slots
+          image(symbols[reels[i]], width/2.55 + i * 150, height / 1.78 - 100, 100, 100);
+          
+
+        }
+        showText(10,10,10,18,"SPINS = " + spins,width-width/5,height/15);
+        
+        showText(255,255,0,20,"Money : $"+ budget,width/6,height/15);
+        showText(0,0,0,22,lastText,width/2,height/2.8);
+        image(values, width/2.2, height/1.28, 170, 120);
+      }
+
+      function showText(r,g,b,size,texto,x,y) {
+        textSize(size);
+        fill(color(r,g,b));
+        textAlign(CENTER);
+        text(texto, x, y );
+      }
+
+      document.getElementById('spinButton').addEventListener('click', function() {
+        spinSound.play();
+        // Start spinning all reels
+        for (let i = 0; i < numReels; i++) {
+          reelSpinning[i] = true;
+        }
+
+        budget -= 50; // Deduct 10 from budget
+        spins++; // Increment spins
+
+        // Stop each reel with a delay
+        stopReels();
+      });
+
+
+      function stopReels() {
+        for (let i = 0; i < numReels; i++) {
+          setTimeout(() => { reelSpinning[i] = false;}, (i+1) * 500);
+        }  
+        setTimeout(() => { checkWin();}, 1505); 
+      }
+
+      function checkWin() {
+        if (reelSpinning[2] === false) {
+          const combination = `${symbolNames[reels[0]]}-${symbolNames[reels[1]]}-${symbolNames[reels[2]]}`;
+          const twoSymbolCombination1 = `${symbolNames[reels[0]]}-${symbolNames[reels[1]]}`;
+          const twoSymbolCombination2 = `${symbolNames[reels[1]]}-${symbolNames[reels[2]]}`;
+          const twoSymbolCombination3 = `${symbolNames[reels[0]]}-${symbolNames[reels[2]]}`;
+
+          //console.log(combination)
+
+          if (winningsTable[combination]) {
+            winSound.play();
+            lastText = "You Win for 3 equal! " + winningsTable[combination];;
+            budget += winningsTable[combination];
+          } else if (winningsTable[twoSymbolCombination1] || winningsTable[twoSymbolCombination2] || winningsTable[twoSymbolCombination3]) {
+            coinSound.play();
+            lastText = "You got two identical symbols! ";
+            if (winningsTable[twoSymbolCombination1]) {
+              budget += winningsTable[twoSymbolCombination1];
+              lastText += winningsTable[twoSymbolCombination1];
+            } else if (winningsTable[twoSymbolCombination2]) {
+              budget += winningsTable[twoSymbolCombination2];
+              lastText += winningsTable[twoSymbolCombination2];
+            } else if (winningsTable[twoSymbolCombination3]) {
+              budget += winningsTable[twoSymbolCombination3];
+              lastText += winningsTable[twoSymbolCombination3];
+            }
+          } else {
+            lostSound.play();
+            lastText = "Try Again!";
+          }
+        }
+      }
+    </script> 
+  </body>
+</html>

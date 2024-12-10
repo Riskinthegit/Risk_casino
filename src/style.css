@@ -1,17 +1,26 @@
 #canvasContainer {
-    position: absolute;
+    
     width: 100%;
     height: 100%;
+    position: absolute;
     margin: 0 auto;
     margin-left: 0;
   top: 0;
-  background-image: "/
-  static/data/background.png" ;
+  background-image: "/static/data/background.png" ;
+  padding: 0;
   }
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  
   
   #spinButton {
     position: absolute;
-    bottom: 55%;
+    bottom: 54%;
     left: 49%;
   
    

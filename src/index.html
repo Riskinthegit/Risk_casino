@@ -4,105 +4,106 @@
       <meta charset="utf-8">
       <link rel="stylesheet" type="text/css" href="style.css">
       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
-      <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
-                "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.128.0/examples/jsm/loaders/GLTFLoader.js"
-            }
-        }
-        </script>
-        <script type="module">
-        import * as THREE from 'three';
-        import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
     
-        // Your script.js content here
-        const canvas = document.querySelector('canvas#webgl');
-        const scene = new THREE.Scene();
-    
-        const gltfloader = new GLTFLoader();
-        gltfloader.load('/data/tragafinal.gltf', (gltf) => {
-            console.log(gltf);
-            const material = new THREE.MeshBasicMaterial({
-              color: 0xff0000,
-
-            })
-            var group = new THREE.Group();
-    
-            for (const child of gltf.scene.children) {
-                group.add(child);
-            }
-            scene.add(group, material);
-            group.scale.setScalar(0.01);
-        });
-    
-        const ambientLight = new THREE.AmbientLight(0xffffff, 2.4);
-        scene.add(ambientLight);
-    
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
-        directionalLight.castShadow = true;
-        directionalLight.shadow.mapSize.set(1024, 1024);
-        directionalLight.shadow.camera.far = 15;
-        directionalLight.shadow.camera.left = -7;
-        directionalLight.shadow.camera.top = 7;
-        directionalLight.shadow.camera.right = 7;
-        directionalLight.shadow.camera.bottom = -7;
-        directionalLight.position.set(5, 5, 5);
-        scene.add(directionalLight);
-    
-        const sizes = {
-            width: window.innerWidth,
-            height: window.innerHeight
-        };
-    
-        window.addEventListener('resize', () => {
-            sizes.width = window.innerWidth;
-            sizes.height = window.innerHeight;
-    
-            camera.aspect = sizes.width / sizes.height;
-            camera.updateProjectionMatrix();
-    
-            renderer.setSize(sizes.width, sizes.height);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        });
-    
-        const loader = new THREE.TextureLoader();
-        loader.load('/data/background.png', function (texture) {
-            scene.background = texture;
-        }, undefined, function (err) {
-            console.error('Error al cargar la textura:', err);
-        });
-    
-        const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-        camera.position.set(0, 0.375, 0.45);
-        scene.add(camera);
-    
-        const renderer = new THREE.WebGLRenderer({
-            canvas: canvas
-        });
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        renderer.setSize(sizes.width, sizes.height);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-        const clock = new THREE.Clock();
-        let previousTime = 0;
-    
-        const tick = () => {
-            const elapsedTime = clock.getElapsedTime();
-            const deltaTime = elapsedTime - previousTime;
-            previousTime = elapsedTime;
-    
-            renderer.render(scene, camera);
-            window.requestAnimationFrame(tick);
-        };
-    
-        tick();
-        </script>
-
       </head>
-  <body>
+      <body>
+        <script type="importmap">
+          {
+              "imports": {
+                  "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                  "three/examples/jsm/loaders/GLTFLoader.js": "https://unpkg.com/three@0.128.0/examples/jsm/loaders/GLTFLoader.js"
+              }
+          }
+          
+   </script>
+ 
+  <script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
+  // Your script.js content here
+  const canvas = document.querySelector('canvas#webgl');
+  const scene = new THREE.Scene();
+
+  const gltfloader = new GLTFLoader();
+  gltfloader.load('/data/tragafinal.gltf', (gltf) => {
+      console.log(gltf);
+     
+
+      
+      var group = new THREE.Group();
+
+      for (const child of gltf.scene.children) {
+          group.add(child);
+      }
+      scene.add(group);
+      group.scale.setScalar(0.01);
+      
+  });
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 2.4);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.set(1024, 1024);
+  directionalLight.shadow.camera.far = 15;
+  directionalLight.shadow.camera.left = -7;
+  directionalLight.shadow.camera.top = 7;
+  directionalLight.shadow.camera.right = 7;
+  directionalLight.shadow.camera.bottom = -7;
+  directionalLight.position.set(5, 5, 5);
+  scene.add(directionalLight);
+
+  const sizes = {
+      width: window.innerWidth,
+      height: window.innerHeight
+  };
+
+  window.addEventListener('resize', () => {
+      sizes.width = window.innerWidth;
+      sizes.height = window.innerHeight;
+
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(sizes.width, sizes.height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  });
+
+  const loader = new THREE.TextureLoader();
+  loader.load('/data/background.png', function (texture) {
+      scene.background = texture;
+  }, undefined, function (err) {
+      console.error('Error al cargar la textura:', err);
+  });
+
+  const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+  camera.position.set(0, 0.375, 0.45);
+  scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({
+      canvas: canvas
+  });
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const clock = new THREE.Clock();
+  let previousTime = 0;
+
+  const tick = () => {
+      const elapsedTime = clock.getElapsedTime();
+      const deltaTime = elapsedTime - previousTime;
+      previousTime = elapsedTime;
+
+      renderer.render(scene, camera);
+      window.requestAnimationFrame(tick);
+  };
+
+  tick();
+  </script>
     <div>
       <canvas id="webgl"></canvas>
       
@@ -181,9 +182,9 @@
           // Draw a square with a border
         fill(0,0,0,0,0);
         stroke(255);
-        rect(width/2.5 +i *150, height / 1.75 - 81, 81, 81);
+        rect(width/2.55 +i *150, height / 1.75 - 81, 81, 81);
           // Draw the slots
-          image(symbols[reels[i]], width/2.4 + i * 150, height / 1.75 - 100, 100, 100);
+          image(symbols[reels[i]], width/2.55 + i * 150, height / 1.78 - 100, 100, 100);
           
 
         }
